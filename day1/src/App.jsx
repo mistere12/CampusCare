@@ -1,33 +1,23 @@
-import Dish from "./Dish.jsx";
-
+import Menu from "./menu.jsx";
+import "./App.css";
 function Header() {
-  return <h1>Addis Eats</h1>;
+  return (
+    <header>
+      <h1>Addis Eats</h1>
+      <p>Order food across Addis.</p>
+    </header>
+  );
 }
-
-const menu = [
-  { id: 1, name: "Doro Wat", price: 240 },
-  { id: 2, name: "Shiro", price: 120 },
-  { id: 3, name: "Tibs", price: 280 },
-];
 
 function App() {
   return (
     <div>
       <Header />
-
-      <p>Order great food across Addis.</p>
-
-      <div>
-        {menu.map((dish) => (
-          <Dish
-            key={dish.id}
-            name={dish.name}
-            price={dish.price}
-          />
-        ))}
-      </div>
+      <Menu />
     </div>
   );
 }
 
 export default App;
+
+
