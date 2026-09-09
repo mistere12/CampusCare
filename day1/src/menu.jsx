@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { dishes } from "./data";
+import { useSearchParams } from "react-router-dom";
+import dishes from "../data/dishes";
+import DishCard from "../components/DishCard";
 
 function Menu() {
   const [selectedCategory, setSelectedCategory] = useState("All");
