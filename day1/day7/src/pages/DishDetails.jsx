@@ -34,10 +34,9 @@ function DishDetails() {
 
       <p>{dish.description}</p>
 
-      <button onClick={() => addToCart(dish)}>
-        Add to Cart
-      </button>
-
+     <button onClick={() => addToCart(dish)}>
+  Add to Cart
+</button>
       <br />
       <br />
 
