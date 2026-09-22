@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import useCartStore from "../store/cartStore";
 
 function Checkout() {
-  const { cart, totalPrice } = useCart();
+  const cart = useCartStore(
+    (state) => state.cart
+  );
+
+  const totalPrice = cart.reduce(
+    (total, item) =>
+      total + item.price * item.quantity,
+    0
+  );
 
   if (cart.length === 0) {
     return (

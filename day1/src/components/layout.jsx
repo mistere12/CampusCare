@@ -1,8 +1,13 @@
 import { Link, Outlet } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import useCartStore from "../store/cartStore";
 
 function Layout() {
-  const { totalItems } = useCart();
+  const cart = useCartStore((state) => state.cart);
+
+  const totalItems = cart.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
     <div>
@@ -12,9 +17,11 @@ function Layout() {
         <nav>
           <Link to="/">Home</Link>
           <Link to="/menu">Menu</Link>
+
           <Link to="/cart">
             Cart ({totalItems})
           </Link>
+
           <Link to="/checkout">
             Checkout
           </Link>

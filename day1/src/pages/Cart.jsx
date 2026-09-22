@@ -1,23 +1,35 @@
 import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import useCartStore from "../store/cartStore";
 
 function Cart() {
-  const {
-    cart,
-    increaseQuantity,
-    decreaseQuantity,
-    removeFromCart,
-    totalPrice,
-  } = useCart();
+  const cart = useCartStore(
+    (state) => state.cart
+  );
+
+  const increaseQuantity = useCartStore(
+    (state) => state.increaseQuantity
+  );
+
+  const decreaseQuantity = useCartStore(
+    (state) => state.decreaseQuantity
+  );
+
+  const removeFromCart = useCartStore(
+    (state) => state.removeFromCart
+  );
+
+  const totalPrice = cart.reduce(
+    (total, item) =>
+      total + item.price * item.quantity,
+    0
+  );
 
   if (cart.length === 0) {
     return (
       <section>
         <h2>Your Cart</h2>
 
-        <p>
-          Your cart is empty.
-        </p>
+        <p>Your cart is empty.</p>
 
         <Link to="/menu">
           Go to Menu
@@ -50,9 +62,7 @@ function Cart() {
               -
             </button>
 
-            <span>
-              {item.quantity}
-            </span>
+            <span>{item.quantity}</span>
 
             <button
               onClick={() =>

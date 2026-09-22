@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import useCartStore from "../store/cartStore";
 
 function DishCard({ dish }) {
-  const { addToCart } = useCart();
+  const addToCart = useCartStore(
+    (state) => state.addToCart
+  );
 
   return (
     <article className="dish-card">

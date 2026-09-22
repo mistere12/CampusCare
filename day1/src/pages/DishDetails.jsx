@@ -1,48 +1,105 @@
-import { Link, useParams } from "react-router-dom";
-import dishes from "../data/dishes";
-import { useCart } from "../context/CartContext";
+import { Link } from "react-router-dom";
+import useCartStore from "../store/cartStore";
 
-function DishDetails() {
-  const { id } = useParams();
+function Cart() {
+  const cart = useCartStore(
+    (state) => state.cart
+  );
 
-  const { addToCart } = useCart();
+  const increaseQuantity = useCartStore(
+    (state) => state.increaseQuantity
+  );
 
-  const dish = dishes.find((dish) => dish.id === id);
+  const decreaseQuantity = useCartStore(
+    (state) => state.decreaseQuantity
+  );
 
-  if (!dish) {
+  const removeFromCart = useCartStore(
+    (state) => state.removeFromCart
+  );
+
+  const totalPrice = cart.reduce(
+    (total, item) =>
+      total + item.price * item.quantity,
+    0
+  );
+
+  if (cart.length === 0) {
     return (
       <section>
-        <h2>Dish Not Found</h2>
+        <h2>Your Cart</h2>
+
+        <p>Your cart is empty.</p>
 
         <Link to="/menu">
-          Back to Menu
+          Go to Menu
         </Link>
       </section>
     );
   }
 
   return (
-    <section className="dish-details">
-      <h2>{dish.name}</h2>
+    <section>
+      <h2>Your Cart</h2>
 
-      <p>Category: {dish.category}</p>
+      {cart.map((item) => (
+        <div
+          className="cart-item"
+          key={item.id}
+        >
+          <h3>{item.name}</h3>
 
-      <p>Price: {dish.price} ETB</p>
+          <p>
+            {item.price} ETB each
+          </p>
 
-      <p>{dish.description}</p>
+          <div>
+            <button
+              onClick={() =>
+                decreaseQuantity(item.id)
+              }
+            >
+              -
+            </button>
 
-      <button onClick={() => addToCart(dish)}>
-        Add to Cart
-      </button>
+            <span>{item.quantity}</span>
 
-      <br />
-      <br />
+            <button
+              onClick={() =>
+                increaseQuantity(item.id)
+              }
+            >
+              +
+            </button>
+          </div>
 
-      <Link to="/menu">
-        ← Back to Menu
+          <p>
+            Subtotal:{" "}
+            {item.price * item.quantity} ETB
+          </p>
+
+          <button
+            onClick={() =>
+              removeFromCart(item.id)
+            }
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+
+      <h2>
+        Total: {totalPrice} ETB
+      </h2>
+
+      <Link
+        className="button"
+        to="/checkout"
+      >
+        Go to Checkout
       </Link>
     </section>
   );
 }
 
-export default DishDetails;
+export default Cart;
