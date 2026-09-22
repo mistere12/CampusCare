@@ -1,41 +1,40 @@
-// import Menu from "./menu.jsx";
-// import "./App.css";
-// function Header() {
-//   return (
-//     <header>
-//       <h1>Addis Eats</h1>
-//     {/* <p>Order food across Addis.</p> */}
-//     </header>
-//   );
-// }
-
-// function App() {
-//   return (
-//     <div>
-//       <Header />
-//       <Menu />
-//     </div>
-//   );
-// }
-
-// export default App;
-
+// 
 import {
   Routes,
   Route,
 } from "react-router-dom";
 
+import {
+  lazy,
+  Suspense,
+} from "react";
+
 import Layout from "./components/Layout";
+import ErrorBoundary from "./ErrorBoundary";
 
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import DishDetails from "./pages/DishDetails";
 import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
 import SignIn from "./pages/SignIn";
 import NotFound from "./pages/NotFound";
 
 import RequireAuth from "./components/RequireAuth";
+
+// Lazy-loaded pages
+const Checkout = lazy(
+  () => import("./pages/Checkout")
+);
+
+const Receipt = lazy(
+  () => import("./pages/Receipt")
+);
+
+function Loading() {
+  return (
+    <p>Loading...</p>
+  );
+}
 
 function App() {
   return (
@@ -51,29 +50,56 @@ function App() {
 
         <Route
           path="menu"
-          element={<Menu />}
+          element={
+            <ErrorBoundary
+              fallback={<p>Menu failed to load.</p>}
+            >
+              <Menu />
+            </ErrorBoundary>
+          }
         />
 
         <Route
           path="menu/:id"
           element={<DishDetails />}
         />
+
         <Route
           path="cart"
-          element={<Cart />}
+          element={
+            <ErrorBoundary
+              fallback={<p>Cart failed to load.</p>}
+            >
+              <Cart />
+            </ErrorBoundary>
+          }
         />
+
         <Route
           path="sign-in"
           element={<SignIn />}
         />
+
         <Route
           path="checkout"
           element={
             <RequireAuth>
-              <Checkout />
+              <Suspense fallback={<Loading />}>
+                <Checkout />
+              </Suspense>
             </RequireAuth>
           }
         />
+
+        <Route
+          path="receipt"
+          element={
+            <Suspense fallback={<Loading />}>
+              <Receipt />
+            </Suspense>
+          }
+        />
+
         <Route
           path="*"
           element={<NotFound />}
